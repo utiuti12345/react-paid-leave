@@ -13,7 +13,7 @@ const styles = (theme) => ({
     },
     formControl: {
         margin: theme.spacing(1),
-        width: 150,
+        width: 250,
     },
 });
 
@@ -53,7 +53,7 @@ class ControlledOpenSelect extends React.Component {
     }
 
     componentDidMount() {
-        fetch("https://script.google.com/macros/s/AKfycbzr4-IY8RvfQ82xtTpocmlTjl4A6U2sGNOCcigUX4PNIzJugnI/exec")
+        fetch("https://script.google.com/macros/s/AKfycbzr4-IY8RvfQ82xtTpocmlTjl4A6U2sGNOCcigUX4PNIzJugnI/exec?sheet="+ this.props.sheet)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -85,7 +85,7 @@ class ControlledOpenSelect extends React.Component {
             return (
                 <div>
                     <FormControl className={classes.formControl}>
-                        <InputLabel>社員名</InputLabel>
+                        <InputLabel>{this.props.labelName}</InputLabel>
                         <Select
                             open={this.open}
                             onClose={this.handleClose}
@@ -94,7 +94,7 @@ class ControlledOpenSelect extends React.Component {
                             onChange={this.handleChange}
                         >
                             {data.map((employee) =>(
-                                <MenuItem key={employee.id} value={employee.employee_name}>{employee.employee_name}</MenuItem>
+                                <MenuItem key={employee.id} value={employee.name}>{employee.name}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
