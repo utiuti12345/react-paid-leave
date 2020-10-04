@@ -1,17 +1,20 @@
 import React from 'react';
-import DatePickers from "../common/DatePickers";
+import DatePicker from "../common/DatePicker";
 
 import './PaidLeave.css';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
 import ControlledOpenSelect from "../common/ControlledOpenSelect";
 import {withStyles} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
+import Tooltip from "@material-ui/core/Tooltip";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from '@material-ui/icons/Add';
+import Switch from "@material-ui/core/Switch";
 
 const styles = (theme) => ({
     layout: {
@@ -37,6 +40,9 @@ const styles = (theme) => ({
             padding: theme.spacing(3),
         },
     },
+    fab: {
+        margin: theme.spacing(2),
+    },
 });
 
 class PaidLeave extends React.Component {
@@ -44,11 +50,13 @@ class PaidLeave extends React.Component {
         super(props);
 
         this.state = {
-            dates: ["","","",""],
+            checked: true,
+            dates: [],
         };
 
         this.addDatePicker = this.addDatePicker.bind(this);
         this.deleteDatePicker = this.deleteDatePicker.bind(this);
+        this.handleChanged = this.handleChanged.bind(this);
     }
 
     addDatePicker() {
@@ -67,6 +75,12 @@ class PaidLeave extends React.Component {
         );
     }
 
+    handleChanged(e) {
+        this.setState({
+            checked: e.target.checked
+        })
+    }
+
     render() {
         console.log(this.state.dates);
         const {classes} = this.props;
@@ -75,38 +89,72 @@ class PaidLeave extends React.Component {
                 <CssBaseline/>
                 <main className={classes.layout}>
                     <Paper square className={classes.paper}>
+                        <Typography component="div">
+                            <Grid component="label" container alignItems="center" spacing={1}>
+                                <Grid item>期間指定</Grid>
+                                <Grid item>
+                                    <Switch checked={this.state.checked} onChange={this.handleChanged}
+                                            name="checked"/>
+                                </Grid>
+                                <Grid item>個別日程</Grid>
+                            </Grid>
+                        </Typography>
                         <Typography component="h1" variant="h4" align="center">
                             有給申請
                         </Typography>
-                        <Grid container spacing={3}>
+                        <Grid container spacing={3} justify="flex-start">
                             <Grid item xs={12} sm={6}>
                                 <ControlledOpenSelect labelName="社員名" sheet="employee_list"/>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <ControlledOpenSelect labelName="承認者" sheet="approve_list"/>
                             </Grid>
-                            <Grid item xs={12}>
-                                {this.state.dates.map((value, index) => (
-                                    <React.Fragment key={index}>
-                                        <Box display="flex"
-                                             flexWrap="wrap"
-                                             p={1}
-                                             m={1}
-                                             bgcolor="background.paper">
-                                            <Grid item xs={12} sm={6}>
-                                                <DatePickers/>
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <IconButton aria-label="delete" onClick={() => this.deleteDatePicker(index)}>
-                                                    <DeleteIcon fontSize="Large"/>
-                                                </IconButton>
-                                            </Grid>
-                                        </Box>
-                                    </React.Fragment>
-                                ))}
-                            </Grid>
                         </Grid>
-                        <button className="button primary" onClick={this.addDatePicker}>+</button>
+                        {this.state.checked ?
+                            <Grid container spacing={6}>
+                                <React.Fragment>
+                                    <Grid item xs={12} sm={12} >
+                                        {this.state.dates.map((value, index) =>
+                                            <React.Fragment key={index}>
+                                                <Box display="flex"
+                                                     flexWrap="wrap"
+                                                     p={1}
+                                                     m={1}
+                                                     bgcolor="background.paper">
+                                                    <Grid item xs={4} sm={4} container justify="flex-start">
+                                                        <DatePicker/>
+                                                    </Grid>
+                                                    <Grid item xs={1} sm={1} container justify="flex-start">
+                                                        <IconButton aria-label="delete"
+                                                                    onClick={() => this.deleteDatePicker(index)}>
+                                                            <DeleteIcon fontSize="Large"/>
+                                                        </IconButton>
+                                                    </Grid>
+                                                </Box>
+                                            </React.Fragment>
+                                        )}
+                                    </Grid>
+                                    <Tooltip title="Add" aria-label="add">
+                                        <Fab color="primary" className={classes.fab} onClick={this.addDatePicker}>
+                                            <AddIcon/>
+                                        </Fab>
+                                    </Tooltip>
+                                </React.Fragment>
+                            </Grid>
+                            :
+                            <Grid>
+                                <Box display="flex"
+                                     flexWrap="wrap"
+                                     p={1}
+                                     m={1}
+                                     bgcolor="background.paper">
+                                    <Grid item xs={5} sm={5}>
+
+                                    </Grid>
+                                </Box>
+                            </Grid>
+                        }
+
                     </Paper>
                 </main>
             </React.Fragment>

@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import ControlledOpenSelect from './components/common/ControlledOpenSelect';
-import DatePickers from './components/common/DatePickers';
+import DatePickers from './components/common/DatePicker';
 import PaidLeave from "./components/paidleave/PaidLeave";
 
 function App() {
