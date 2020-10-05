@@ -1,5 +1,5 @@
 import React from 'react';
-import DatePicker from "../common/DatePicker";
+import BasicDatePicker from "../common/DatePicker";
 
 import './PaidLeave.css';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,6 +15,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from '@material-ui/icons/Add';
 import Switch from "@material-ui/core/Switch";
+import Button from "@material-ui/core/Button";
+import FormLabel from "@material-ui/core/FormLabel";
 
 const styles = (theme) => ({
     layout: {
@@ -113,7 +115,7 @@ class PaidLeave extends React.Component {
                         {this.state.checked ?
                             <Grid container spacing={6}>
                                 <React.Fragment>
-                                    <Grid item xs={12} sm={12} >
+                                    <Grid item xs={12} sm={12}>
                                         {this.state.dates.map((value, index) =>
                                             <React.Fragment key={index}>
                                                 <Box display="flex"
@@ -122,7 +124,7 @@ class PaidLeave extends React.Component {
                                                      m={1}
                                                      bgcolor="background.paper">
                                                     <Grid item xs={4} sm={4} container justify="flex-start">
-                                                        <DatePicker/>
+                                                        <BasicDatePicker labelName="有給取得日"/>
                                                     </Grid>
                                                     <Grid item xs={1} sm={1} container justify="flex-start">
                                                         <IconButton aria-label="delete"
@@ -135,26 +137,31 @@ class PaidLeave extends React.Component {
                                         )}
                                     </Grid>
                                     <Tooltip title="Add" aria-label="add">
-                                        <Fab color="primary" className={classes.fab} onClick={this.addDatePicker}>
+                                        <Fab color="primary" className={classes.fab}
+                                             onClick={this.addDatePicker}>
                                             <AddIcon/>
                                         </Fab>
                                     </Tooltip>
                                 </React.Fragment>
                             </Grid>
                             :
-                            <Grid>
-                                <Box display="flex"
-                                     flexWrap="wrap"
-                                     p={1}
-                                     m={1}
-                                     bgcolor="background.paper">
-                                    <Grid item xs={5} sm={5}>
-
-                                    </Grid>
-                                </Box>
+                            <Grid container xs={12} justify="center" >
+                                <Grid item xs={4} sm={4}>
+                                    <BasicDatePicker labelName="開始日"/>
+                                </Grid>
+                                <Grid item xs={1} sm={1} alignItems="flex-end">
+                                    {/*<FormLabel>〜</FormLabel>*/}
+                                </Grid>
+                                <Grid item xs={4} sm={4}>
+                                    <BasicDatePicker labelName="終了日"/>
+                                </Grid>
                             </Grid>
                         }
-
+                        <Grid container xs={12} justify="center" >
+                            <Tooltip title="日程を確認してね" arrow>
+                                <Button>承認する</Button>
+                            </Tooltip>
+                        </Grid>
                     </Paper>
                 </main>
             </React.Fragment>

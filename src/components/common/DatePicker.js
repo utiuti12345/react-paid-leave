@@ -15,7 +15,7 @@ const styles = makeStyles((theme) => ({
     },
 }));
 
-class DatePicker extends React.Component{
+class BasicDatePicker extends React.Component{
     constructor(props){
         super(props);
     }
@@ -27,10 +27,9 @@ class DatePicker extends React.Component{
                 <form className={classes.container} noValidate>
                     <TextField
                         id="date"
-                        label="日付"
+                        label={this.props.labelName}
                         type="date"
                         className={classes.textField}
-                        onChange={this.handleDatechange}
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -41,4 +40,4 @@ class DatePicker extends React.Component{
     }
 }
 
-export default  withStyles(styles)(DatePicker);
+export default  withStyles(styles)(BasicDatePicker);
