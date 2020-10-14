@@ -1,19 +1,19 @@
 import React from 'react';
+import {connect} from "react-redux";
+
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
 import {withStyles} from "@material-ui/core";
+import {changeApproveId, changeEmployeeId} from "../../actions/PaidLeaveActions";
 
 const styles = (theme) => ({
     button: {
         display: 'block',
-        marginTop: theme.spacing(2),
     },
     formControl: {
-        margin: theme.spacing(1),
-        width: 250,
+        width: 270,
     },
 });
 
@@ -24,9 +24,7 @@ class ControlledOpenSelect extends React.Component {
             employeeName: '',
             open: false,
             isLoaded: false,
-            data: [],
             error: null,
-            list: this.expressions
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -35,6 +33,14 @@ class ControlledOpenSelect extends React.Component {
     }
 
     handleChange(e) {
+        const data = this.state.data.find(item => item.name === e.target.value);
+
+        let action;
+        action = this.props.type === "employee"
+            ? changeEmployeeId({employeeId: data.id})
+            : changeApproveId({approveId:data.id})
+        ;
+        this.props.dispatch(action);
         this.setState({
             employeeName: e.target.value
         });
@@ -90,9 +96,8 @@ class ControlledOpenSelect extends React.Component {
                             open={this.open}
                             onClose={this.handleClose}
                             onOpen={this.handleOpen}
-                            value={this.employeeName}
-                            onChange={this.handleChange}
-                        >
+                            value={this.state.employeeName}
+                            onChange={this.handleChange}>
                             {data.map((employee) =>(
                                 <MenuItem key={employee.id} value={employee.name}>{employee.name}</MenuItem>
                             ))}
@@ -104,4 +109,4 @@ class ControlledOpenSelect extends React.Component {
     }
 }
 
-export default withStyles(styles)(ControlledOpenSelect);
+export default connect(state => state)(withStyles(styles)(ControlledOpenSelect));

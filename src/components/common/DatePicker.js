@@ -1,43 +1,68 @@
 import React from "react";
+import {connect} from "react-redux";
+
 import TextField from "@material-ui/core/TextField";
-import {makeStyles, withStyles} from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
+import {changePaidLeave, deletePaidLeave} from "../../actions/PaidLeaveActions";
 
-const styles = makeStyles((theme) => ({
-    container: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignContent:'flex-start'
-    },
-    textField: {
-        margin: theme.spacing(1),
-        width:'250'
-    },
-}));
-
-class BasicDatePicker extends React.Component{
-    constructor(props){
+class BasicDatePicker extends React.Component {
+    constructor(props) {
         super(props);
+
+
+
+        this.changeDatePicker = this.changeDatePicker.bind(this);
+        this.deleteDatePicker = this.deleteDatePicker.bind(this);
+    }
+
+    changeDatePicker(e) {
+        console.log(e.target.value);
+        console.log(e.target.index);
+        let action = changePaidLeave(
+            {
+                index: e.target.index,
+                date: e.target.value
+            });
+        this.props.dispatch(action);
+    }
+
+    deleteDatePicker() {
+        let action = deletePaidLeave(
+            {
+                index: this.props.index
+            });
+        this.props.dispatch(action);
     }
 
     render() {
-        const { classes } = this.props;
-        return(
-            <React.Fragment>
-                <form className={classes.container} noValidate>
-                    <TextField
-                        id="date"
-                        label={this.props.labelName}
-                        type="date"
-                        className={classes.textField}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </form>
-            </React.Fragment>
+        console.log(this.props);
+        return (
+            <div>
+                <Grid container justify="center">
+                    <Grid item xs={3}>
+                        <TextField
+                            id="date"
+                            label={this.props.labelName}
+                            type="date"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            size="small"
+                            onChange={this.changeDatePicker}
+                        />
+                    </Grid>
+                    <Grid item xs={3}>
+                        <IconButton aria-label="delete" onClick={this.deleteDatePicker}>
+                            <DeleteIcon fontSize="large"/>
+                        </IconButton>
+                    </Grid>
+                </Grid>
+            </div>
         )
     }
 }
 
-export default  withStyles(styles)(BasicDatePicker);
+export default connect(state => state)(BasicDatePicker);

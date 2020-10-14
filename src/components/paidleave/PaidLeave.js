@@ -2,9 +2,6 @@ import React from 'react';
 import BasicDatePicker from "../common/DatePicker";
 
 import './PaidLeave.css';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
@@ -16,7 +13,8 @@ import Fab from "@material-ui/core/Fab";
 import AddIcon from '@material-ui/icons/Add';
 import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
-import FormLabel from "@material-ui/core/FormLabel";
+import {addPaidLeave} from "../../actions/PaidLeaveActions";
+import {connect} from "react-redux";
 
 const styles = (theme) => ({
     layout: {
@@ -53,28 +51,17 @@ class PaidLeave extends React.Component {
 
         this.state = {
             checked: true,
-            dates: [],
         };
 
         this.addDatePicker = this.addDatePicker.bind(this);
-        this.deleteDatePicker = this.deleteDatePicker.bind(this);
         this.handleChanged = this.handleChanged.bind(this);
+
+        this.applyPaidLeave = this.applyPaidLeave.bind(this);
     }
 
     addDatePicker() {
-        const _dates = [...this.state.dates];
-        _dates.push("");
-        this.setState(
-            {dates: _dates}
-        );
-    }
-
-    deleteDatePicker(index) {
-        const _dates = [...this.state.dates];
-        _dates.splice(index, 1);
-        this.setState(
-            {dates: _dates}
-        );
+        let action = addPaidLeave({});
+        this.props.dispatch(action);
     }
 
     handleChanged(e) {
@@ -83,9 +70,75 @@ class PaidLeave extends React.Component {
         })
     }
 
+    applyPaidLeave(e) {
+        let json = "";
+        if (this.state.checked) {
+            json = {
+                type: "default",
+                dates: this.state.dates
+            }
+        } else {
+            json = {
+                type: "period",
+                startDate: this.state.startDate,
+                endDate: this.state.endDate,
+            }
+        }
+
+        console.log(json);
+
+        fetch('https://script.google.com/macros/s/AKfycbzr4-IY8RvfQ82xtTpocmlTjl4A6U2sGNOCcigUX4PNIzJugnI/exec', {
+            method: 'POST',
+            body: JSON.stringify(json)
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    console.log(result);
+                },
+                // 補足：コンポーネント内のバグによる例外を隠蔽しないためにも
+                // catch()ブロックの代わりにここでエラーハンドリングすることが重要です
+                (error) => {
+                    console.log(error);
+                }
+            )
+    }
+
     render() {
-        console.log(this.state.dates);
+        //console.log(this.props.message);
         const {classes} = this.props;
+        let paidLeave;
+
+
+        if (this.props.mode === 'default') {
+            paidLeave =
+                <React.Fragment>
+                    {this.props.paidLeave.map((value, index) => (
+                        <BasicDatePicker key={index} index={index} labelName="有給取得日"/>
+                    ))}
+                    <Tooltip title="Add" aria-label="add">
+                        <Fab color="primary" className={classes.fab}
+                             onClick={this.addDatePicker}>
+                            <AddIcon/>
+                        </Fab>
+                    </Tooltip>
+                </React.Fragment>
+        } else {
+            paidLeave = (
+                <Grid container xs={12} justify="center">
+                    <Grid item xs={4} sm={4}>
+                        <BasicDatePicker labelName="開始日"/>
+                    </Grid>
+                    <Grid item xs={1} sm={1} alignItems="flex-end">
+                        {/*<FormLabel>〜</FormLabel>*/}
+                    </Grid>
+                    <Grid item xs={4} sm={4}>
+                        <BasicDatePicker labelName="終了日"/>
+                    </Grid>
+                </Grid>
+            );
+        }
+
         return (
             <React.Fragment>
                 <CssBaseline/>
@@ -104,62 +157,20 @@ class PaidLeave extends React.Component {
                         <Typography component="h1" variant="h4" align="center">
                             有給申請
                         </Typography>
-                        <Grid container spacing={3} justify="flex-start">
-                            <Grid item xs={12} sm={6}>
-                                <ControlledOpenSelect labelName="社員名" sheet="employee_list"/>
+                        <Grid container spacing={1} justify="center">
+                            <Grid item xs={12}>
+                                <ControlledOpenSelect labelName="社員名" sheet="employee_list" type="employee"/>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <ControlledOpenSelect labelName="承認者" sheet="approve_list"/>
+                            <Grid item xs={12}>
+                                <ControlledOpenSelect labelName="承認者" sheet="approve_list" type="approve"/>
                             </Grid>
+                            <Grid item xs={12}/>
+                            <Grid item xs={12}/>
                         </Grid>
-                        {this.state.checked ?
-                            <Grid container spacing={6}>
-                                <React.Fragment>
-                                    <Grid item xs={12} sm={12}>
-                                        {this.state.dates.map((value, index) =>
-                                            <React.Fragment key={index}>
-                                                <Box display="flex"
-                                                     flexWrap="wrap"
-                                                     p={1}
-                                                     m={1}
-                                                     bgcolor="background.paper">
-                                                    <Grid item xs={4} sm={4} container justify="flex-start">
-                                                        <BasicDatePicker labelName="有給取得日"/>
-                                                    </Grid>
-                                                    <Grid item xs={1} sm={1} container justify="flex-start">
-                                                        <IconButton aria-label="delete"
-                                                                    onClick={() => this.deleteDatePicker(index)}>
-                                                            <DeleteIcon fontSize="Large"/>
-                                                        </IconButton>
-                                                    </Grid>
-                                                </Box>
-                                            </React.Fragment>
-                                        )}
-                                    </Grid>
-                                    <Tooltip title="Add" aria-label="add">
-                                        <Fab color="primary" className={classes.fab}
-                                             onClick={this.addDatePicker}>
-                                            <AddIcon/>
-                                        </Fab>
-                                    </Tooltip>
-                                </React.Fragment>
-                            </Grid>
-                            :
-                            <Grid container xs={12} justify="center" >
-                                <Grid item xs={4} sm={4}>
-                                    <BasicDatePicker labelName="開始日"/>
-                                </Grid>
-                                <Grid item xs={1} sm={1} alignItems="flex-end">
-                                    {/*<FormLabel>〜</FormLabel>*/}
-                                </Grid>
-                                <Grid item xs={4} sm={4}>
-                                    <BasicDatePicker labelName="終了日"/>
-                                </Grid>
-                            </Grid>
-                        }
-                        <Grid container xs={12} justify="center" >
+                        {paidLeave}
+                        <Grid container justify="center">
                             <Tooltip title="日程を確認してね" arrow>
-                                <Button>承認する</Button>
+                                <Button onClick={this.applyPaidLeave}>申請する</Button>
                             </Tooltip>
                         </Grid>
                     </Paper>
@@ -169,4 +180,4 @@ class PaidLeave extends React.Component {
     }
 }
 
-export default withStyles(styles)(PaidLeave);
+export default withStyles(styles)(connect(state => state)(PaidLeave));
