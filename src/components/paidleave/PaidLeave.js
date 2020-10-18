@@ -1,20 +1,22 @@
 import React from 'react';
-import BasicDatePicker from "../common/DatePicker";
+import {connect} from "react-redux";
 
+import PaidLeaveDatePicker from "../common/PaidLeaveDatePicker";
+import PaidLeaveSelectBox from "../common/PaidLeaveSelectBox";
 import './PaidLeave.css';
-import Typography from "@material-ui/core/Typography";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Paper from "@material-ui/core/Paper";
-import ControlledOpenSelect from "../common/ControlledOpenSelect";
+
+import {addPaidLeave} from "../../actions/PaidLeaveActions";
+
 import {withStyles} from "@material-ui/core";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Tooltip from "@material-ui/core/Tooltip";
 import Fab from "@material-ui/core/Fab";
-import AddIcon from '@material-ui/icons/Add';
 import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
-import {addPaidLeave} from "../../actions/PaidLeaveActions";
-import {connect} from "react-redux";
+import AddIcon from '@material-ui/icons/Add';
 
 const styles = (theme) => ({
     layout: {
@@ -72,16 +74,21 @@ class PaidLeave extends React.Component {
 
     applyPaidLeave(e) {
         let json = "";
+        console.log(this.props);
         if (this.state.checked) {
             json = {
                 type: "default",
-                dates: this.state.dates
+                employeeId: this.props.employeeId,
+                approveId: this.props.approveId,
+                paidLeave: this.props.paidLeave
             }
         } else {
             json = {
                 type: "period",
-                startDate: this.state.startDate,
-                endDate: this.state.endDate,
+                employeeId: this.props.employeeId,
+                approveId: this.props.approveId,
+                startDate: this.props.startDate,
+                endDate: this.props.endDate,
             }
         }
 
@@ -109,12 +116,11 @@ class PaidLeave extends React.Component {
         const {classes} = this.props;
         let paidLeave;
 
-
-        if (this.props.mode === 'default') {
+        if (this.state.checked) {
             paidLeave =
                 <React.Fragment>
                     {this.props.paidLeave.map((value, index) => (
-                        <BasicDatePicker key={index} index={index} labelName="有給取得日"/>
+                        <PaidLeaveDatePicker key={index} index={index} labelName="有給取得日" delete={true} isStartDate={false} isEndDate={false}/>
                     ))}
                     <Tooltip title="Add" aria-label="add">
                         <Fab color="primary" className={classes.fab}
@@ -125,15 +131,12 @@ class PaidLeave extends React.Component {
                 </React.Fragment>
         } else {
             paidLeave = (
-                <Grid container xs={12} justify="center">
-                    <Grid item xs={4} sm={4}>
-                        <BasicDatePicker labelName="開始日"/>
+                <Grid container justify="flex-start">
+                    <Grid item xs={12} sm={6}>
+                        <PaidLeaveDatePicker labelName="開始日" delete={false} isStartDate={true} isEndDate={false}/>
                     </Grid>
-                    <Grid item xs={1} sm={1} alignItems="flex-end">
-                        {/*<FormLabel>〜</FormLabel>*/}
-                    </Grid>
-                    <Grid item xs={4} sm={4}>
-                        <BasicDatePicker labelName="終了日"/>
+                    <Grid item xs={12} sm={6}>
+                        <PaidLeaveDatePicker labelName="終了日" delete={false} isStartDate={false} isEndDate={true}/>
                     </Grid>
                 </Grid>
             );
@@ -158,11 +161,12 @@ class PaidLeave extends React.Component {
                             有給申請
                         </Typography>
                         <Grid container spacing={1} justify="center">
+                            <Grid item xs={1} sm={3}/>
                             <Grid item xs={12}>
-                                <ControlledOpenSelect labelName="社員名" sheet="employee_list" type="employee"/>
+                                <PaidLeaveSelectBox labelName="社員名" sheet="employee_list" type="employee"/>
                             </Grid>
                             <Grid item xs={12}>
-                                <ControlledOpenSelect labelName="承認者" sheet="approve_list" type="approve"/>
+                                <PaidLeaveSelectBox labelName="承認者" sheet="approve_list" type="approve"/>
                             </Grid>
                             <Grid item xs={12}/>
                             <Grid item xs={12}/>
