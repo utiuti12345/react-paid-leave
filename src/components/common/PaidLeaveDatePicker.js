@@ -8,23 +8,21 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import {changePaidLeave, deletePaidLeave} from "../../actions/PaidLeaveActions";
 
-class BasicDatePicker extends React.Component {
+class PaidLeaveDatePicker extends React.Component {
     constructor(props) {
         super(props);
-
-
 
         this.changeDatePicker = this.changeDatePicker.bind(this);
         this.deleteDatePicker = this.deleteDatePicker.bind(this);
     }
 
     changeDatePicker(e) {
-        console.log(e.target.value);
-        console.log(e.target.index);
         let action = changePaidLeave(
             {
-                index: e.target.index,
-                date: e.target.value
+                date: e.target.value,
+                index: this.props.index,
+                isStartDate: this.props.isStartDate,
+                isEndDate: this.props.isEndDate,
             });
         this.props.dispatch(action);
     }
@@ -38,11 +36,24 @@ class BasicDatePicker extends React.Component {
     }
 
     render() {
-        console.log(this.props);
+        console.log(this.props.delete);
+        let deleteIcon;
+        if (this.props.delete) {
+            deleteIcon =
+                <React.Fragment>
+                    <Grid item xs={1} sm={2}>
+                        <IconButton aria-label="delete" onClick={this.deleteDatePicker}>
+                            <DeleteIcon fontSize="large"/>
+                        </IconButton>
+                    </Grid>
+                    <Grid item xs={1} sm={1}/>
+                </React.Fragment>
+        }
         return (
             <div>
-                <Grid container justify="center">
-                    <Grid item xs={3}>
+                <Grid container justify="flex-start">
+                    <Grid item xs={1} sm={3}/>
+                    <Grid item xs={6} sm={4}>
                         <TextField
                             id="date"
                             label={this.props.labelName}
@@ -54,15 +65,11 @@ class BasicDatePicker extends React.Component {
                             onChange={this.changeDatePicker}
                         />
                     </Grid>
-                    <Grid item xs={3}>
-                        <IconButton aria-label="delete" onClick={this.deleteDatePicker}>
-                            <DeleteIcon fontSize="large"/>
-                        </IconButton>
-                    </Grid>
+                    {(deleteIcon !== null) ? deleteIcon : null}
                 </Grid>
             </div>
         )
     }
 }
 
-export default connect(state => state)(BasicDatePicker);
+export default connect(state => state)(PaidLeaveDatePicker);

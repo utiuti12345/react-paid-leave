@@ -17,7 +17,7 @@ const styles = (theme) => ({
     },
 });
 
-class ControlledOpenSelect extends React.Component {
+class PaidLeaveSelectBox extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -109,4 +109,4 @@ class ControlledOpenSelect extends React.Component {
     }
 }
 
-export default connect(state => state)(withStyles(styles)(ControlledOpenSelect));
+export default connect(state => state)(withStyles(styles)(PaidLeaveSelectBox));

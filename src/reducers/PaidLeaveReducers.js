@@ -40,7 +40,7 @@ function addPaidLeaveReduce(state, action) {
     _paidLeave.push('');
 
     return {
-        employeeId: action.employeeId,
+        employeeId: state.employeeId,
         approveId: state.approveId,
         paidLeave: _paidLeave,
         startDate: state.startDate,
@@ -66,6 +66,7 @@ function deletePaidLeaveReduce(state, action) {
 
 function changeEmployeeIdReduce(state, action) {
     const payload = action.payload;
+    console.log(payload.employeeId);
     return {
         employeeId: payload.employeeId,
         approveId: state.approveId,
@@ -90,17 +91,41 @@ function changeApproveIdReduce(state, action) {
 
 function changePaidLeaveReduce(state, action) {
     const payload = action.payload;
-    const _paidLeave = [...state.paidLeave];
-    _paidLeave[payload.index] = payload.date;
 
-    return {
-        employeeId: state.employeeId,
-        approveId: state.approveId,
-        paidLeave: _paidLeave,
-        startDate: state.startDate,
-        endDate: state.endDate,
-        mode: state.mode, // default and period
-    };
+    if(!payload.isStartDate && !payload.isEndDate){
+        const _paidLeave = [...state.paidLeave];
+        _paidLeave[payload.index] = payload.date;
+
+        return {
+            employeeId: state.employeeId,
+            approveId: state.approveId,
+            paidLeave: _paidLeave,
+            startDate: state.startDate,
+            endDate: state.endDate,
+            mode: state.mode, // default and period
+        };
+    }else if(payload.isStartDate && !payload.isEndDate){
+        console.log(payload.date);
+        return {
+            employeeId: state.employeeId,
+            approveId: state.approveId,
+            paidLeave: state.paidLeave,
+            startDate: payload.date,
+            endDate: state.endDate,
+            mode: state.mode, // default and period
+        };
+    }else if(!payload.isStartDate && payload.isEndDate){
+        console.log(payload.date);
+        return {
+            employeeId: state.employeeId,
+            approveId: state.approveId,
+            paidLeave: state.paidLeave,
+            startDate: state.startDate,
+            endDate: payload.date,
+            mode: state.mode, // default and period
+        };
+    }
+    return state;
 }
 
 export default createStore(paidLeaveReducer);
