@@ -17,6 +17,7 @@ import Fab from "@material-ui/core/Fab";
 import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
 import AddIcon from '@material-ui/icons/Add';
+import Login from "../google/Login";
 
 const styles = (theme) => ({
     layout: {
@@ -47,12 +48,18 @@ const styles = (theme) => ({
     },
 });
 
+const GOOGLE_SIGN_IN_PARAMS = {
+    client_id: 'client_id',
+    ux_mode: 'redirect',  // popupはブラウザーでブロックされる
+};
+
 class PaidLeave extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             checked: true,
+            isGoogleSignedIn: null,
         };
 
         this.addDatePicker = this.addDatePicker.bind(this);
@@ -111,8 +118,37 @@ class PaidLeave extends React.Component {
             )
     }
 
+    componentDidMount() {
+        window.gapi.load('auth2', () => {
+            // eslint-disable-next-line no-unused-expressions
+            window.gapi.auth2.init(GOOGLE_SIGN_IN_PARAMS)
+                .then(
+                    (gAuth) => {
+                        if(gAuth.isSignedIn.get()){
+                            this.setState(
+                                {isGoogleSignedIn:true}
+                            );
+                            console.log("SignedIn")
+                        }else{
+                            this.setState(
+                                {isGoogleSignedIn:false}
+                            );
+                            console.log("not SignedIn")
+                        }
+                    }
+                ),
+                (error)=>{
+                    this.setState(
+                        {isGoogleSignedIn:false}
+                    );
+                    console.log("error"+error);
+                }
+        })
+    }
+
     render() {
         //console.log(this.props.message);
+        const {isGoogleSignedIn} = this.state;
         const {classes} = this.props;
         let paidLeave;
 
@@ -141,46 +177,59 @@ class PaidLeave extends React.Component {
                 </Grid>
             );
         }
-
-        return (
-            <React.Fragment>
-                <CssBaseline/>
-                <main className={classes.layout}>
-                    <Paper square className={classes.paper}>
-                        <Typography component="div">
-                            <Grid component="label" container alignItems="center" spacing={1}>
-                                <Grid item>期間指定</Grid>
-                                <Grid item>
-                                    <Switch checked={this.state.checked} onChange={this.handleChanged}
-                                            name="checked"/>
+        if(isGoogleSignedIn){
+            return (
+                <React.Fragment>
+                    <CssBaseline/>
+                    <main className={classes.layout}>
+                        <Paper square className={classes.paper}>
+                            <Typography component="div">
+                                <Grid component="label" container alignItems="center" spacing={1}>
+                                    <Grid item>期間指定</Grid>
+                                    <Grid item>
+                                        <Switch checked={this.state.checked} onChange={this.handleChanged}
+                                                name="checked"/>
+                                    </Grid>
+                                    <Grid item>個別日程</Grid>
                                 </Grid>
-                                <Grid item>個別日程</Grid>
+                            </Typography>
+                            <Typography component="h1" variant="h4" align="center">
+                                有給申請
+                            </Typography>
+                            <Grid container spacing={1} justify="center">
+                                <Grid item xs={1} sm={3}/>
+                                <Grid item xs={12}>
+                                    <PaidLeaveSelectBox labelName="社員名" sheet="employee_list" type="employee"/>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <PaidLeaveSelectBox labelName="承認者" sheet="approve_list" type="approve"/>
+                                </Grid>
+                                <Grid item xs={12}/>
+                                <Grid item xs={12}/>
                             </Grid>
-                        </Typography>
-                        <Typography component="h1" variant="h4" align="center">
-                            有給申請
-                        </Typography>
-                        <Grid container spacing={1} justify="center">
-                            <Grid item xs={1} sm={3}/>
-                            <Grid item xs={12}>
-                                <PaidLeaveSelectBox labelName="社員名" sheet="employee_list" type="employee"/>
+                            {paidLeave}
+                            <Grid container justify="center">
+                                <Tooltip title="日程を確認してね" arrow>
+                                    <Button onClick={this.applyPaidLeave}>申請する</Button>
+                                </Tooltip>
                             </Grid>
-                            <Grid item xs={12}>
-                                <PaidLeaveSelectBox labelName="承認者" sheet="approve_list" type="approve"/>
-                            </Grid>
-                            <Grid item xs={12}/>
-                            <Grid item xs={12}/>
-                        </Grid>
-                        {paidLeave}
-                        <Grid container justify="center">
-                            <Tooltip title="日程を確認してね" arrow>
-                                <Button onClick={this.applyPaidLeave}>申請する</Button>
-                            </Tooltip>
-                        </Grid>
-                    </Paper>
-                </main>
-            </React.Fragment>
-        )
+                        </Paper>
+                    </main>
+                </React.Fragment>
+            )
+        } else if(isGoogleSignedIn === null){
+            return(
+                    <div>
+                        ログインしてるか確認中〜
+                    </div>
+                )
+        }else {
+            return(
+                <div>
+                    ログインしてから実行してね
+                </div>
+            )
+        }
     }
 }
 
