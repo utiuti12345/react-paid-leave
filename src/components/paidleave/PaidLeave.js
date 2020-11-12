@@ -81,27 +81,43 @@ class PaidLeave extends React.Component {
 
     applyPaidLeave(e) {
         let json = "";
-        console.log(this.props);
         if (this.state.checked) {
             json = {
                 type: "default",
                 employeeId: this.props.employeeId,
                 approveId: this.props.approveId,
-                paidLeave: this.props.paidLeave
+                paidLeave: this.props.paidLeave,
             }
         } else {
+            const paidLeave = [];
+            const endDate = new Date(this.props.endDate);
+            paidLeave.push(this.props.startDate);
+            for(let i=1;;i++){
+                let tomorrow = new Date(this.props.startDate);
+                tomorrow.setDate(tomorrow.getDate() + i);
+                let formatDate = 'YYYY-MM-DD';
+                formatDate = formatDate.replace(/YYYY/, tomorrow.getFullYear());
+                formatDate = formatDate.replace(/MM/, tomorrow.getMonth() + 1);
+                formatDate = formatDate.replace(/DD/, tomorrow.getDate());
+                paidLeave.push(formatDate.toString());
+                if(tomorrow.getTime() === endDate. getTime()){
+                    break;
+                }
+            }
+
+            console.log(paidLeave);
+
             json = {
                 type: "period",
                 employeeId: this.props.employeeId,
                 approveId: this.props.approveId,
-                startDate: this.props.startDate,
-                endDate: this.props.endDate,
+                paidLeave: paidLeave,
             }
         }
 
         console.log(json);
 
-        fetch('https://script.google.com/macros/s/AKfycbzr4-IY8RvfQ82xtTpocmlTjl4A6U2sGNOCcigUX4PNIzJugnI/exec', {
+        fetch('https://script.google.com/macros/s/AAAAAA-BXzjdhA/exec', {
             method: 'POST',
             body: JSON.stringify(json)
         })
@@ -124,24 +140,23 @@ class PaidLeave extends React.Component {
             window.gapi.auth2.init(GOOGLE_SIGN_IN_PARAMS)
                 .then(
                     (gAuth) => {
-                        if(gAuth.isSignedIn.get()){
+                        console.log(gAuth.isSignedIn.get());
+                        if (gAuth.isSignedIn.get()) {
                             this.setState(
-                                {isGoogleSignedIn:true}
+                                {isGoogleSignedIn: true}
                             );
-                            console.log("SignedIn")
-                        }else{
+                        } else {
                             this.setState(
-                                {isGoogleSignedIn:false}
+                                {isGoogleSignedIn: false}
                             );
-                            console.log("not SignedIn")
                         }
                     }
                 ),
-                (error)=>{
+                (error) => {
                     this.setState(
-                        {isGoogleSignedIn:false}
+                        {isGoogleSignedIn: false}
                     );
-                    console.log("error"+error);
+                    console.log("error" + error);
                 }
         })
     }
@@ -156,7 +171,8 @@ class PaidLeave extends React.Component {
             paidLeave =
                 <React.Fragment>
                     {this.props.paidLeave.map((value, index) => (
-                        <PaidLeaveDatePicker key={index} index={index} labelName="有給取得日" delete={true} isStartDate={false} isEndDate={false}/>
+                        <PaidLeaveDatePicker key={index} index={index} labelName="有給取得日" delete={true}
+                                             isStartDate={false} isEndDate={false}/>
                     ))}
                     <Tooltip title="Add" aria-label="add">
                         <Fab color="primary" className={classes.fab}
@@ -177,7 +193,7 @@ class PaidLeave extends React.Component {
                 </Grid>
             );
         }
-        if(isGoogleSignedIn){
+        if (isGoogleSignedIn) {
             return (
                 <React.Fragment>
                     <CssBaseline/>
@@ -217,16 +233,16 @@ class PaidLeave extends React.Component {
                     </main>
                 </React.Fragment>
             )
-        } else if(isGoogleSignedIn === null){
-            return(
-                    <div>
-                        ログインしてるか確認中〜
-                    </div>
-                )
-        }else {
-            return(
+        } else if (isGoogleSignedIn === null) {
+            return (
                 <div>
-                    ログインしてから実行してね
+                    ログインしてるか確認中〜
+                </div>
+            )
+        } else {
+            return (
+                <div>
+                    <Login/>
                 </div>
             )
         }

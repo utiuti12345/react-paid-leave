@@ -59,7 +59,7 @@ class PaidLeaveSelectBox extends React.Component {
     }
 
     componentDidMount() {
-        fetch("https://script.google.com/macros/s/AKfycbzr4-IY8RvfQ82xtTpocmlTjl4A6U2sGNOCcigUX4PNIzJugnI/exec?sheet="+ this.props.sheet)
+        fetch("https://script.google.com/macros/s/AAAA-BXzjdhA/exec?sheet="+ this.props.sheet)
             .then(res => res.json())
             .then(
                 (result) => {

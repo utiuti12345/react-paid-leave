@@ -28,7 +28,6 @@ export function paidLeaveReducer(state = initData, action) {
         case CHANGE_APPROVE_ID:
             return changeApproveIdReduce(state, action);
         case CHANGE_PAID_LEAVE:
-            console.log(action);
             return changePaidLeaveReduce(state,action);
         default:
             return state;
@@ -66,7 +65,6 @@ function deletePaidLeaveReduce(state, action) {
 
 function changeEmployeeIdReduce(state, action) {
     const payload = action.payload;
-    console.log(payload.employeeId);
     return {
         employeeId: payload.employeeId,
         approveId: state.approveId,
@@ -105,7 +103,6 @@ function changePaidLeaveReduce(state, action) {
             mode: state.mode, // default and period
         };
     }else if(payload.isStartDate && !payload.isEndDate){
-        console.log(payload.date);
         return {
             employeeId: state.employeeId,
             approveId: state.approveId,
@@ -115,7 +112,6 @@ function changePaidLeaveReduce(state, action) {
             mode: state.mode, // default and period
         };
     }else if(!payload.isStartDate && payload.isEndDate){
-        console.log(payload.date);
         return {
             employeeId: state.employeeId,
             approveId: state.approveId,

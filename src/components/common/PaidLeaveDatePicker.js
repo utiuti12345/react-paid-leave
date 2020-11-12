@@ -36,7 +36,6 @@ class PaidLeaveDatePicker extends React.Component {
     }
 
     render() {
-        console.log(this.props.delete);
         let deleteIcon;
         if (this.props.delete) {
             deleteIcon =
