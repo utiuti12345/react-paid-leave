@@ -8,6 +8,8 @@ import Select from '@material-ui/core/Select';
 import {withStyles} from "@material-ui/core";
 import {changeApproveId, changeEmployeeId} from "../../actions/PaidLeaveActions";
 
+import AppConfig from "../../config/AppConfig";
+
 const styles = (theme) => ({
     button: {
         display: 'block',
@@ -59,7 +61,7 @@ class PaidLeaveSelectBox extends React.Component {
     }
 
     componentDidMount() {
-        fetch("https://script.google.com/macros/s/AAAA-BXzjdhA/exec?sheet="+ this.props.sheet)
+        fetch(AppConfig.API_URL + "?sheet="+ this.props.sheet)
             .then(res => res.json())
             .then(
                 (result) => {
