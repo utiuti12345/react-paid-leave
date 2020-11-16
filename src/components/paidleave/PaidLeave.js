@@ -6,6 +6,7 @@ import PaidLeaveSelectBox from "../common/PaidLeaveSelectBox";
 import './PaidLeave.css';
 
 import {addPaidLeave} from "../../actions/PaidLeaveActions";
+import GOOGLE_SIGN_IN_PARAMS from "../../config/GoogleSignInParams";
 
 import {withStyles} from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -18,6 +19,7 @@ import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
 import AddIcon from '@material-ui/icons/Add';
 import Login from "../google/Login";
+import AppConfig from "../../config/AppConfig";
 
 const styles = (theme) => ({
     layout: {
@@ -47,11 +49,6 @@ const styles = (theme) => ({
         margin: theme.spacing(2),
     },
 });
-
-const GOOGLE_SIGN_IN_PARAMS = {
-    client_id: 'client_id',
-    ux_mode: 'redirect',  // popupはブラウザーでブロックされる
-};
 
 class PaidLeave extends React.Component {
     constructor(props) {
@@ -100,7 +97,7 @@ class PaidLeave extends React.Component {
                 formatDate = formatDate.replace(/MM/, tomorrow.getMonth() + 1);
                 formatDate = formatDate.replace(/DD/, tomorrow.getDate());
                 paidLeave.push(formatDate.toString());
-                if(tomorrow.getTime() === endDate. getTime()){
+                if(tomorrow.getTime() === endDate.getTime()){
                     break;
                 }
             }
@@ -117,7 +114,7 @@ class PaidLeave extends React.Component {
 
         console.log(json);
 
-        fetch('https://script.google.com/macros/s/AAAAAA-BXzjdhA/exec', {
+        fetch(AppConfig.API_URL, {
             method: 'POST',
             body: JSON.stringify(json)
         })
@@ -150,14 +147,13 @@ class PaidLeave extends React.Component {
                                 {isGoogleSignedIn: false}
                             );
                         }
-                    }
-                ),
-                (error) => {
+                    })
+                .catch((error) => {
                     this.setState(
                         {isGoogleSignedIn: false}
                     );
                     console.log("error" + error);
-                }
+                })
         })
     }
 
