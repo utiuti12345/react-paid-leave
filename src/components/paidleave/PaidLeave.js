@@ -58,25 +58,20 @@ class PaidLeave extends React.Component {
             checked: true,
             isGoogleSignedIn: null,
         };
-
-        this.addDatePicker = this.addDatePicker.bind(this);
-        this.handleChanged = this.handleChanged.bind(this);
-
-        this.applyPaidLeave = this.applyPaidLeave.bind(this);
     }
 
-    addDatePicker() {
+    addDatePicker = () => {
         let action = addPaidLeave({});
         this.props.dispatch(action);
-    }
+    };
 
-    handleChanged(e) {
+    handleChanged = (e) => {
         this.setState({
             checked: e.target.checked
         })
-    }
+    };
 
-    applyPaidLeave(e) {
+    applyPaidLeave = (e) => {
         let json = "";
         if (this.state.checked) {
             json = {
@@ -172,7 +167,7 @@ class PaidLeave extends React.Component {
                     ))}
                     <Tooltip title="Add" aria-label="add">
                         <Fab color="primary" className={classes.fab}
-                             onClick={this.addDatePicker}>
+                             onClick={(e) => this.addDatePicker(e)}>
                             <AddIcon/>
                         </Fab>
                     </Tooltip>
@@ -199,7 +194,7 @@ class PaidLeave extends React.Component {
                                 <Grid component="label" container alignItems="center" spacing={1}>
                                     <Grid item>期間指定</Grid>
                                     <Grid item>
-                                        <Switch checked={this.state.checked} onChange={this.handleChanged}
+                                        <Switch checked={this.state.checked} onChange={(e) => this.handleChanged(e)}
                                                 name="checked"/>
                                     </Grid>
                                     <Grid item>個別日程</Grid>
@@ -222,7 +217,7 @@ class PaidLeave extends React.Component {
                             {paidLeave}
                             <Grid container justify="center">
                                 <Tooltip title="日程を確認してね" arrow>
-                                    <Button onClick={this.applyPaidLeave}>申請する</Button>
+                                    <Button onClick={() => this.applyPaidLeave()}>申請する</Button>
                                 </Tooltip>
                             </Grid>
                         </Paper>
