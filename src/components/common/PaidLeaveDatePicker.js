@@ -11,9 +11,6 @@ import {changePaidLeave, deletePaidLeave} from "../../actions/PaidLeaveActions";
 class PaidLeaveDatePicker extends React.Component {
     constructor(props) {
         super(props);
-
-        this.changeDatePicker = this.changeDatePicker.bind(this);
-        this.deleteDatePicker = this.deleteDatePicker.bind(this);
     }
 
     changeDatePicker = (e) => {
