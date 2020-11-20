@@ -28,10 +28,6 @@ class PaidLeaveSelectBox extends React.Component {
             isLoaded: false,
             error: null,
         };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.handleOpen = this.handleOpen.bind(this);
     }
 
     handleChange(e) {
@@ -48,19 +44,19 @@ class PaidLeaveSelectBox extends React.Component {
         });
     }
 
-    handleClose() {
+    handleClose = () => {
         this.setState({
             open: false
         });
-    }
+    };
 
-    handleOpen() {
+    handleOpen = () =>  {
         this.setState({
             open: true
         });
-    }
+    };
 
-    componentDidMount() {
+    componentDidMount = () =>  {
         fetch(AppConfig.API_URL + "?sheet="+ this.props.sheet)
             .then(res => res.json())
             .then(
@@ -80,7 +76,7 @@ class PaidLeaveSelectBox extends React.Component {
                     });
                 }
             )
-    }
+    };
 
     render() {
         const {classes} = this.props;
@@ -96,10 +92,10 @@ class PaidLeaveSelectBox extends React.Component {
                         <InputLabel>{this.props.labelName}</InputLabel>
                         <Select
                             open={this.open}
-                            onClose={this.handleClose}
-                            onOpen={this.handleOpen}
+                            onClose={() => this.handleClose()}
+                            onOpen={() => this.handleOpen()}
                             value={this.state.employeeName}
-                            onChange={this.handleChange}>
+                            onChange={(e) => this.handleChange(e)}>
                             {data.map((employee) =>(
                                 <MenuItem key={employee.id} value={employee.name}>{employee.name}</MenuItem>
                             ))}

@@ -16,7 +16,7 @@ class PaidLeaveDatePicker extends React.Component {
         this.deleteDatePicker = this.deleteDatePicker.bind(this);
     }
 
-    changeDatePicker(e) {
+    changeDatePicker = (e) => {
         let action = changePaidLeave(
             {
                 date: e.target.value,
@@ -25,15 +25,15 @@ class PaidLeaveDatePicker extends React.Component {
                 isEndDate: this.props.isEndDate,
             });
         this.props.dispatch(action);
-    }
+    };
 
-    deleteDatePicker() {
+    deleteDatePicker = () => {
         let action = deletePaidLeave(
             {
                 index: this.props.index
             });
         this.props.dispatch(action);
-    }
+    };
 
     render() {
         let deleteIcon;
@@ -41,7 +41,7 @@ class PaidLeaveDatePicker extends React.Component {
             deleteIcon =
                 <React.Fragment>
                     <Grid item xs={1} sm={2}>
-                        <IconButton aria-label="delete" onClick={this.deleteDatePicker}>
+                        <IconButton aria-label="delete" onClick={() => this.deleteDatePicker()}>
                             <DeleteIcon fontSize="large"/>
                         </IconButton>
                     </Grid>
@@ -61,7 +61,7 @@ class PaidLeaveDatePicker extends React.Component {
                                 shrink: true,
                             }}
                             size="small"
-                            onChange={this.changeDatePicker}
+                            onChange={(e) => this.changeDatePicker(e)}
                         />
                     </Grid>
                     {(deleteIcon !== null) ? deleteIcon : null}
