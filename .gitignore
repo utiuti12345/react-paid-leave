@@ -1,5 +1,8 @@
 ./idea
 
+./build
+.env.development
+
 # Logs
 logs
 *.log
