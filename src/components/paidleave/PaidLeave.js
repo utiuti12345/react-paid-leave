@@ -128,6 +128,7 @@ class PaidLeave extends React.Component {
 
     componentDidMount() {
         window.gapi.load('auth2', () => {
+            console.log(GOOGLE_SIGN_IN_PARAMS.client_id);
             // eslint-disable-next-line no-unused-expressions
             window.gapi.auth2.init(GOOGLE_SIGN_IN_PARAMS)
                 .then(
