@@ -2,6 +2,7 @@
 
 ./build
 .env.development
+.env.production
 
 # Logs
 logs
