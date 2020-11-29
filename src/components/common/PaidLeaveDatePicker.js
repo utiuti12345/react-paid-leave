@@ -9,10 +9,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import {changePaidLeave, deletePaidLeave} from "../../actions/PaidLeaveActions";
 
 class PaidLeaveDatePicker extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     changeDatePicker = (e) => {
         let action = changePaidLeave(
             {
