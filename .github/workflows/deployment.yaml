@@ -19,12 +19,12 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: install and build
-        run: |
-          npm ci
-          npm run build
-        env:
-          REACT_APP_CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+      run: |
+        npm ci
+        npm run build-prod-github-actions
+      env:
+        REACT_APP_CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
+        REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
     - name: rsync deploy
       run: rsync -auzrv -e "ssh -i key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022" --delete ./build/ utiuti12345@sv8117.xserver.jp:/home/utiuti12345/utiuti12345.xsrv.jp/public_html/ --exclude .htaccess
