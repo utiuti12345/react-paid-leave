@@ -54,6 +54,7 @@ class PaidLeaveDatePicker extends React.Component {
                                 shrink: true,
                             }}
                             size="small"
+                            value={this.props.value}
                             onChange={(e) => this.changeDatePicker(e)}
                         />
                     </Grid>
