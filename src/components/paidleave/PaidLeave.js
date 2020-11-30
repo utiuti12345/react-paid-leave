@@ -57,6 +57,7 @@ class PaidLeave extends React.Component {
         this.state = {
             checked: true,
             isGoogleSignedIn: null,
+            loading:false,
         };
     }
 
@@ -72,6 +73,8 @@ class PaidLeave extends React.Component {
     };
 
     applyPaidLeave = (e) => {
+        this.setState({ loading: true });
+
         let json = "";
         if (this.state.checked) {
             json = {
@@ -123,8 +126,23 @@ class PaidLeave extends React.Component {
                 (error) => {
                     console.log(error);
                 }
-            )
-    }
+            );
+
+        this.setState({ loading: false });
+    };
+
+    canApply = () => {
+        const {info,message,loading} = this.state;
+        const validInfo =
+            Object.values(info).filter(value => {
+                return value === '';
+            }).length === 0;
+        const validMessage =
+            Object.values(message).filter(value => {
+                return value !== '';
+            }).length === 0;
+        return validInfo || validMessage || !loading;
+    };
 
     componentDidMount() {
         window.gapi.load('auth2', () => {
@@ -163,7 +181,7 @@ class PaidLeave extends React.Component {
             paidLeave =
                 <React.Fragment>
                     {this.props.paidLeave.map((value, index) => (
-                        <PaidLeaveDatePicker key={index} index={index} labelName="有給取得日" delete={true}
+                        <PaidLeaveDatePicker key={index} index={index} labelName="有給取得日" delete={true} value={value}
                                              isStartDate={false} isEndDate={false}/>
                     ))}
                     <Tooltip title="Add" aria-label="add">
@@ -177,10 +195,10 @@ class PaidLeave extends React.Component {
             paidLeave = (
                 <Grid container justify="flex-start">
                     <Grid item xs={12} sm={6}>
-                        <PaidLeaveDatePicker labelName="開始日" delete={false} isStartDate={true} isEndDate={false}/>
+                        <PaidLeaveDatePicker labelName="開始日" delete={false} isStartDate={true} isEndDate={false} value={this.props.startDate}/>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <PaidLeaveDatePicker labelName="終了日" delete={false} isStartDate={false} isEndDate={true}/>
+                        <PaidLeaveDatePicker labelName="終了日" delete={false} isStartDate={false} isEndDate={true} value={this.props.endDate}/>
                     </Grid>
                 </Grid>
             );
