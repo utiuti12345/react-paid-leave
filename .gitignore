@@ -1,6 +1,6 @@
-./idea/*
+idea/
 
-./build
+build/
 .env.development
 .env.production
 
