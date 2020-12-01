@@ -20,6 +20,7 @@ import Button from "@material-ui/core/Button";
 import AddIcon from '@material-ui/icons/Add';
 import Login from "../google/Login";
 import AppConfig from "../../config/AppConfig";
+import {formatDate} from "../../common/common";
 
 const styles = (theme) => ({
     layout: {
@@ -72,7 +73,7 @@ class PaidLeave extends React.Component {
         })
     };
 
-    applyPaidLeave = (e) => {
+    applyPaidLeave = () => {
         this.setState({ loading: true });
 
         let json = "";
@@ -90,11 +91,8 @@ class PaidLeave extends React.Component {
             for(let i=1;;i++){
                 let tomorrow = new Date(this.props.startDate);
                 tomorrow.setDate(tomorrow.getDate() + i);
-                let formatDate = 'YYYY-MM-DD';
-                formatDate = formatDate.replace(/YYYY/, tomorrow.getFullYear());
-                formatDate = formatDate.replace(/MM/, tomorrow.getMonth() + 1);
-                formatDate = formatDate.replace(/DD/, tomorrow.getDate());
-                paidLeave.push(formatDate.toString());
+                let fDate = formatDate(tomorrow.toString());
+                paidLeave.push(fDate.toString());
                 if(tomorrow.getTime() === endDate.getTime()){
                     break;
                 }

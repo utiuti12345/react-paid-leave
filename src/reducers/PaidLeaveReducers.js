@@ -6,6 +6,7 @@ import {
     CHANGE_APPROVE_ID,
     CHANGE_PAID_LEAVE
 } from "../actions/PaidLeaveActions";
+import {formatDate} from "../common/common";
 
 const initData = {
     employeeId: '',
@@ -36,8 +37,8 @@ export function paidLeaveReducer(state = initData, action) {
 
 function addPaidLeaveReduce(state, action) {
     const _paidLeave = [...state.paidLeave];
-    _paidLeave.push('');
-
+    let date = formatDate(new Date().toString());
+    _paidLeave.push(date.toString());
     return {
         employeeId: state.employeeId,
         approveId: state.approveId,
