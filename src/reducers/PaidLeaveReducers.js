@@ -7,13 +7,14 @@ import {
     CHANGE_PAID_LEAVE
 } from "../actions/PaidLeaveActions";
 import {formatDate} from "../common/common";
+import moment from "moment";
 
 const initData = {
     employeeId: '',
     approveId: '',
     paidLeave: [],
-    startDate: '',
-    endDate: '',
+    startDate: formatDate(moment(new Date()).toString()),
+    endDate: formatDate(moment(new Date()).add(1,'days').toString()),
     mode: 'default', // default and period
 };
 
