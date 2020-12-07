@@ -3,6 +3,7 @@ export const DELETE_PAID_LEAVE = "DELETE_PAID_LEAVE";
 export const CHANGE_EMPLOYEE_ID = "CHANGE_EMPLOYEE_ID";
 export const CHANGE_APPROVE_ID = "CHANGE_APPROVE_ID";
 export const CHANGE_PAID_LEAVE = "CHANGE_PAID_LEAVE";
+export const CHANGE_MESSAGE = "CHANGE_MESSAGE";
 
 export const addPaidLeave = (payload) => ({
     type:ADD_PAID_LEAVE,
@@ -26,5 +27,10 @@ export const changeApproveId = (payload) => ({
 
 export const changePaidLeave = (payload) => ({
     type:CHANGE_PAID_LEAVE,
+    payload
+});
+
+export const changeMessage = (payload) => ({
+    type:CHANGE_MESSAGE,
     payload
 });
