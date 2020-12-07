@@ -13,7 +13,7 @@ import moment from "moment";
 const initData = {
     employeeId: '',
     approveId: '',
-    paidLeave: [],
+    paidLeave: [formatDate(moment(new Date()).toString())],
     startDate: formatDate(moment(new Date()).toString()),
     endDate: formatDate(moment(new Date()).add(1, 'days').toString()),
     message: {
