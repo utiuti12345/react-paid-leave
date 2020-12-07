@@ -1,6 +1,6 @@
 const EMPLOYEE_ERROR_MESSAGE = '社員名を選択してください。';
 const APPROVE_ERROR_MESSAGE = '承認者を選択してください。';
-const DEFAULT_ERROR_MESSAGE = '日程を確認してください。';
+const DEFAULT_ERROR_MESSAGE = '日程を入力してください。';
 const PERIOD_ERROR_MESSAGE = '日程を確認してください。';
 
 const employeeValidation = (id) => {
