@@ -4,7 +4,8 @@ import {
     DELETE_PAID_LEAVE,
     CHANGE_EMPLOYEE_ID,
     CHANGE_APPROVE_ID,
-    CHANGE_PAID_LEAVE
+    CHANGE_PAID_LEAVE,
+    CHANGE_MESSAGE
 } from "../actions/PaidLeaveActions";
 import {formatDate} from "../common/common";
 import moment from "moment";
@@ -14,7 +15,13 @@ const initData = {
     approveId: '',
     paidLeave: [],
     startDate: formatDate(moment(new Date()).toString()),
-    endDate: formatDate(moment(new Date()).add(1,'days').toString()),
+    endDate: formatDate(moment(new Date()).add(1, 'days').toString()),
+    message: {
+        employee: '',
+        approve: '',
+        default: '',
+        period: '',
+    },
     mode: 'default', // default and period
 };
 
@@ -30,7 +37,9 @@ export function paidLeaveReducer(state = initData, action) {
         case CHANGE_APPROVE_ID:
             return changeApproveIdReduce(state, action);
         case CHANGE_PAID_LEAVE:
-            return changePaidLeaveReduce(state,action);
+            return changePaidLeaveReduce(state, action);
+        case CHANGE_MESSAGE:
+            return changeMessageReduce(state, action);
         default:
             return state;
     }
@@ -40,13 +49,16 @@ function addPaidLeaveReduce(state, action) {
     const _paidLeave = [...state.paidLeave];
     let date = formatDate(new Date().toString());
     _paidLeave.push(date.toString());
+    const _message = {
+        employee: state.message.employee,
+        approve: state.message.approve,
+        default: '',
+        period: state.message.period,
+    };
     return {
-        employeeId: state.employeeId,
-        approveId: state.approveId,
+        ...state,
         paidLeave: _paidLeave,
-        startDate: state.startDate,
-        endDate: state.endDate,
-        mode: state.mode, // default and period
+        message: _message,
     };
 }
 
@@ -56,74 +68,77 @@ function deletePaidLeaveReduce(state, action) {
     _paidLeave.splice(payload.index, 1);
 
     return {
-        employeeId: action.employeeId,
-        approveId: state.approveId,
+        ...state,
         paidLeave: _paidLeave,
-        startDate: state.startDate,
-        endDate: state.endDate,
-        mode: state.mode, // default and period
     };
 }
 
 function changeEmployeeIdReduce(state, action) {
     const payload = action.payload;
+    const _message = {
+        employee: payload.message.employee,
+        approve: state.message.approve,
+        default: state.message.default,
+        period: state.message.period,
+    };
     return {
+        ...state,
         employeeId: payload.employeeId,
-        approveId: state.approveId,
-        paidLeave: state.paidLeave,
-        startDate: state.startDate,
-        endDate: state.endDate,
-        mode: state.mode, // default and period
+        message: _message,
     };
 }
 
 function changeApproveIdReduce(state, action) {
     const payload = action.payload;
+    const _message = {
+        employee: state.message.employee,
+        approve: payload.message.approve,
+        default: state.message.default,
+        period: state.message.period,
+    };
     return {
-        employeeId: state.employeeId,
+        ...state,
         approveId: payload.approveId,
-        paidLeave: state.paidLeave,
-        startDate: state.startDate,
-        endDate: state.endDate,
-        mode: state.mode, // default and period
+        message: _message,
     };
 }
 
 function changePaidLeaveReduce(state, action) {
     const payload = action.payload;
 
-    if(!payload.isStartDate && !payload.isEndDate){
+    if (!payload.isStartDate && !payload.isEndDate) {
         const _paidLeave = [...state.paidLeave];
         _paidLeave[payload.index] = payload.date;
 
         return {
-            employeeId: state.employeeId,
-            approveId: state.approveId,
+            ...state,
             paidLeave: _paidLeave,
-            startDate: state.startDate,
-            endDate: state.endDate,
-            mode: state.mode, // default and period
         };
-    }else if(payload.isStartDate && !payload.isEndDate){
+    } else if (payload.isStartDate && !payload.isEndDate) {
         return {
-            employeeId: state.employeeId,
-            approveId: state.approveId,
-            paidLeave: state.paidLeave,
+            ...state,
             startDate: payload.date,
-            endDate: state.endDate,
-            mode: state.mode, // default and period
         };
-    }else if(!payload.isStartDate && payload.isEndDate){
+    } else if (!payload.isStartDate && payload.isEndDate) {
         return {
-            employeeId: state.employeeId,
-            approveId: state.approveId,
-            paidLeave: state.paidLeave,
-            startDate: state.startDate,
+            ...state,
             endDate: payload.date,
-            mode: state.mode, // default and period
         };
     }
     return state;
+}
+
+function changeMessageReduce(state, action) {
+    const payload = action.payload;
+    return {
+        ...state,
+        message: {
+            employee: payload.message.employee,
+            approve: payload.message.approve,
+            default: payload.message.default,
+            period: payload.message.period,
+        },
+    };
 }
 
 export default createStore(paidLeaveReducer);

@@ -13,8 +13,8 @@ class Login extends React.Component{
     }
 
     onSuccess(googleUser) {
-        const profile = googleUser.getBasicProfile();
-        console.log("Name: " + profile.getName());
+        //const profile = googleUser.getBasicProfile();
+        //console.log("Name: " + profile.getName());
     }
 
     render() {
