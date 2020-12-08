@@ -7,15 +7,14 @@ import {
     CHANGE_PAID_LEAVE,
     CHANGE_MESSAGE
 } from "../actions/PaidLeaveActions";
-import {formatDate} from "../common/common";
-import moment from "moment";
+import {addDate, formatDate} from "../common/common";
 
 const initData = {
     employeeId: '',
     approveId: '',
-    paidLeave: [formatDate(moment(new Date()).toString())],
-    startDate: formatDate(moment(new Date()).toString()),
-    endDate: formatDate(moment(new Date()).add(1, 'days').toString()),
+    paidLeave: [formatDate(new Date()).toString()],
+    startDate: formatDate(new Date()).toString(),
+    endDate: formatDate(addDate(new Date(),1)),
     message: {
         employee: '',
         approve: '',
