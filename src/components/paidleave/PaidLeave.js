@@ -8,7 +8,7 @@ import './PaidLeave.css';
 import {addPaidLeave, changeMessage} from "../../actions/PaidLeaveActions";
 
 import AppConfig from "../../config/AppConfig";
-import {formatDate} from "../../common/common";
+import {addDate, diffDate, getYear} from "../../common/common";
 import Validation from "../../validation/Validation";
 
 import GOOGLE_SIGN_IN_PARAMS from "../../config/GoogleSignInParams";
@@ -111,17 +111,16 @@ class PaidLeave extends React.Component {
                     employeeId: this.props.employeeId,
                     approveId: this.props.approveId,
                     paidLeave: this.props.paidLeave,
+                    year:getYear(this.props.paidLeave[0])
                 }
             } else {
                 const paidLeave = [];
-                const endDate = new Date(this.props.endDate);
+                const endDate = this.props.endDate;
                 paidLeave.push(this.props.startDate);
                 for (let i = 1; ; i++) {
-                    let tomorrow = new Date(this.props.startDate);
-                    tomorrow.setDate(tomorrow.getDate() + i);
-                    let fDate = formatDate(tomorrow.toString());
-                    paidLeave.push(fDate.toString());
-                    if (tomorrow.getTime() === endDate.getTime()) {
+                    const date = addDate(this.props.startDate,i);
+                    paidLeave.push(date.toString());
+                    if (diffDate(date,endDate) === 0) {
                         break;
                     }
                 }
@@ -131,6 +130,7 @@ class PaidLeave extends React.Component {
                     employeeId: this.props.employeeId,
                     approveId: this.props.approveId,
                     paidLeave: paidLeave,
+                    year:getYear(paidLeave[0])
                 }
             }
 
