@@ -24,6 +24,9 @@ import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
 import AddIcon from '@material-ui/icons/Add';
 import Login from "../google/Login";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import CustomizedSnackbars from "../common/CustomizedSnackbars";
 
 const styles = (theme) => ({
     layout: {
@@ -66,7 +69,11 @@ class PaidLeave extends React.Component {
                 employee: '',
                 approve: '',
                 period: ''
-            }
+            },
+            progress:false,
+            open: false,
+            type: "success",
+            requestResponseMessage: "成功しました。",
         };
     }
 
@@ -138,15 +145,22 @@ class PaidLeave extends React.Component {
                 method: 'POST',
                 body: JSON.stringify(json)
             })
-                .then(res => res.json())
-                .then(
-                    (result) => {
-                        //console.log(result);
-                    },
-                    // 補足：コンポーネント内のバグによる例外を隠蔽しないためにも
-                    // catch()ブロックの代わりにここでエラーハンドリングすることが重要です
-                    (error) => {
+                .then(res => {
+                        const response = res.json();
+                        console.log(response);
+                        this.setState({
+                            open: true,
+                            type: "success",
+                            requestResponseMessage: "成功しました。"
+                        });
+                })
+                .catch(error => {
                         console.log(error);
+                        this.setState({
+                            open: true,
+                            type: "error",
+                            requestResponseMessage: `失敗しました。(コード：${error.response})`
+                        });
                     }
                 );
         }
@@ -181,7 +195,21 @@ class PaidLeave extends React.Component {
         })
     }
 
+    handleClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        this.setState({ ...this.status, open: false });
+    };
+
     render() {
+        /* 通信中であれば、formを非表示にし、スピナーを表示する */
+        let form = (
+            <Backdrop open={this.state.progress}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        );
+
         //console.log(this.props.message);
         const {isGoogleSignedIn} = this.state;
         const {classes} = this.props;
@@ -271,6 +299,14 @@ class PaidLeave extends React.Component {
                                 </Tooltip>
                             </Grid>
                         </Paper>
+                        <React.Fragment>
+                            <CustomizedSnackbars
+                                open={this.state.open}
+                                handleClose={() => this.handleClose()}
+                                type="success"
+                                message={this.state.requestResponseMessage}
+                            />
+                        </React.Fragment>
                     </main>
                 </React.Fragment>
             )
