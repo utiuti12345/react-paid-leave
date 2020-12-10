@@ -46,7 +46,7 @@ export function paidLeaveReducer(state = initData, action) {
 
 function addPaidLeaveReduce(state, action) {
     const _paidLeave = [...state.paidLeave];
-    let date = formatDate(new Date().toString());
+    let date = formatDate(new Date()).toString();
     _paidLeave.push(date.toString());
     const _message = {
         employee: state.message.employee,
