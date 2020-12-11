@@ -1,12 +1,13 @@
 import React from 'react';
 import {connect} from "react-redux";
 
+import {changeApproveId, changeEmployeeId} from "../../actions/PaidLeaveActions";
+
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import {withStyles} from "@material-ui/core";
-import {changeApproveId, changeEmployeeId} from "../../actions/PaidLeaveActions";
 
 import AppConfig from "../../config/AppConfig";
 
