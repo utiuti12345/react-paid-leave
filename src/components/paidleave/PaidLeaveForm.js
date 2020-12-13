@@ -217,9 +217,11 @@ class PaidLeaveForm extends React.Component {
             );
         }
 
-        return (
-            <div>
-                {this.state.progress && <CustomizedBackdrop progress="true"/>}
+        if (this.state.progress) {
+            return (
+                <CustomizedBackdrop progress="true"/>)
+        } else {
+            return (
                 <div>
                     <Paper square className={classes.paper}>
                         <Typography component="div">
@@ -279,8 +281,8 @@ class PaidLeaveForm extends React.Component {
                         </React.Fragment>
                     </Paper>
                 </div>
-            </div>
-        );
+            );
+        }
     }
 }
 
