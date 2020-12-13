@@ -63,7 +63,7 @@ class PaidLeave extends React.Component {
     }
 
     render() {
-        //console.log(this.props.message);
+        //console.log(this.props.validationMessage);
         const {isGoogleSignedIn} = this.state;
         const {classes} = this.props;
 
