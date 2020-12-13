@@ -20,7 +20,7 @@ const CustomizedSnackbars = props => {
     // return (
     //     <Snackbar
     //         open={open}
-    //         message={message}
+    //         validationMessage={validationMessage}
     //         onClose={handleClose}
     //         TransitionComponent={Transition}
     //         transitionDuration={{

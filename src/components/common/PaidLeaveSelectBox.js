@@ -36,8 +36,8 @@ class PaidLeaveSelectBox extends React.Component {
 
         let action;
         action = this.props.type === "employee"
-            ? changeEmployeeId({employeeId: data.id,message:{employee:''}})
-            : changeApproveId({approveId:data.id,message:{approve:''}})
+            ? changeEmployeeId({employeeId: data.id,validationMessage:{employee:''}})
+            : changeApproveId({approveId:data.id,validationMessage:{approve:''}})
         ;
         this.props.dispatch(action);
         this.setState({
@@ -82,7 +82,7 @@ class PaidLeaveSelectBox extends React.Component {
         const {classes} = this.props;
         const {error, isLoaded, data} = this.state;
         if (error) {
-            return <div>Error: {error.message}</div>;
+            return <div>Error: {error.validationMessage}</div>;
         } else if (!isLoaded) {
             return <div>Loading...</div>;
         } else {

@@ -5,7 +5,7 @@ import {
     CHANGE_EMPLOYEE_ID,
     CHANGE_APPROVE_ID,
     CHANGE_PAID_LEAVE,
-    CHANGE_MESSAGE
+    CHANGE_VALIDATION_MESSAGE, CHANGE_STATUS_MESSAGE, CHANGE_PROGRESS
 } from "../actions/PaidLeaveActions";
 import {addDate, formatDate} from "../common/common";
 
@@ -14,13 +14,19 @@ const initData = {
     approveId: '',
     paidLeave: [formatDate(new Date()).toString()],
     startDate: formatDate(new Date()).toString(),
-    endDate: formatDate(addDate(new Date(),1)),
-    message: {
+    endDate: formatDate(addDate(new Date(), 1)),
+    validationMessage: {
         employee: '',
         approve: '',
         default: '',
         period: '',
     },
+    statusMessage: {
+        open: false,
+        type: '',
+        requestResponseMessage: '',
+    },
+    progress:false,
     mode: 'default', // default and period
 };
 
@@ -37,8 +43,12 @@ export function paidLeaveReducer(state = initData, action) {
             return changeApproveIdReduce(state, action);
         case CHANGE_PAID_LEAVE:
             return changePaidLeaveReduce(state, action);
-        case CHANGE_MESSAGE:
-            return changeMessageReduce(state, action);
+        case CHANGE_VALIDATION_MESSAGE:
+            return changeValidationMessageReduce(state, action);
+        case CHANGE_STATUS_MESSAGE:
+            return changeStatusMessage(state, action);
+        case CHANGE_PROGRESS:
+            return changeProgress(state, action);
         default:
             return state;
     }
@@ -49,15 +59,15 @@ function addPaidLeaveReduce(state, action) {
     let date = formatDate(new Date()).toString();
     _paidLeave.push(date.toString());
     const _message = {
-        employee: state.message.employee,
-        approve: state.message.approve,
+        employee: state.validationMessage.employee,
+        approve: state.validationMessage.approve,
         default: '',
-        period: state.message.period,
+        period: state.validationMessage.period,
     };
     return {
         ...state,
         paidLeave: _paidLeave,
-        message: _message,
+        validationMessage: _message,
     };
 }
 
@@ -75,30 +85,30 @@ function deletePaidLeaveReduce(state, action) {
 function changeEmployeeIdReduce(state, action) {
     const payload = action.payload;
     const _message = {
-        employee: payload.message.employee,
-        approve: state.message.approve,
-        default: state.message.default,
-        period: state.message.period,
+        employee: payload.validationMessage.employee,
+        approve: state.validationMessage.approve,
+        default: state.validationMessage.default,
+        period: state.validationMessage.period,
     };
     return {
         ...state,
         employeeId: payload.employeeId,
-        message: _message,
+        validationMessage: _message,
     };
 }
 
 function changeApproveIdReduce(state, action) {
     const payload = action.payload;
     const _message = {
-        employee: state.message.employee,
-        approve: payload.message.approve,
-        default: state.message.default,
-        period: state.message.period,
+        employee: state.validationMessage.employee,
+        approve: payload.validationMessage.approve,
+        default: state.validationMessage.default,
+        period: state.validationMessage.period,
     };
     return {
         ...state,
         approveId: payload.approveId,
-        message: _message,
+        validationMessage: _message,
     };
 }
 
@@ -127,16 +137,37 @@ function changePaidLeaveReduce(state, action) {
     return state;
 }
 
-function changeMessageReduce(state, action) {
+function changeValidationMessageReduce(state, action) {
     const payload = action.payload;
     return {
         ...state,
-        message: {
-            employee: payload.message.employee,
-            approve: payload.message.approve,
-            default: payload.message.default,
-            period: payload.message.period,
+        validationMessage: {
+            employee: payload.validationMessage.employee,
+            approve: payload.validationMessage.approve,
+            default: payload.validationMessage.default,
+            period: payload.validationMessage.period,
         },
+    };
+}
+
+function changeStatusMessage(state, action) {
+    const payload = action.payload;
+    console.log(payload);
+    return {
+        ...state,
+        statusMessage: {
+            open: payload.open,
+            type: payload.type,
+            requestResponseMessage: payload.requestResponseMessage,
+        },
+    };
+}
+
+function changeProgress(state, action) {
+    const payload = action.payload;
+    return {
+        ...state,
+        progress:payload.progress,
     };
 }
 
