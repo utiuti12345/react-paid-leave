@@ -20,6 +20,7 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper/Paper";
 import {withStyles} from "@material-ui/core";
 import CustomizedBackdrop from "../common/CustomizedBackdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const styles = (theme) => ({
     paper: {
@@ -217,72 +218,71 @@ class PaidLeaveForm extends React.Component {
             );
         }
 
-        if (this.state.progress) {
-            return (
-                <CustomizedBackdrop progress="true"/>)
-        } else {
-            return (
-                <div>
-                    <Paper square className={classes.paper}>
-                        <Typography component="div">
-                            <Grid component="label" container alignItems="center" spacing={1}>
-                                <Grid item>期間指定</Grid>
-                                <Grid item>
-                                    <Switch checked={this.state.checked} onChange={(e) => this.handleChanged(e)}
-                                            name="checked"/>
-                                </Grid>
-                                <Grid item>個別日程</Grid>
+        return (
+            <div>
+                <Paper square className={classes.paper}>
+                    <Typography component="div">
+                        <Grid component="label" container alignItems="center" spacing={1}>
+                            <Grid item>期間指定</Grid>
+                            <Grid item>
+                                <Switch checked={this.state.checked} onChange={(e) => this.handleChanged(e)}
+                                        name="checked"/>
                             </Grid>
-                        </Typography>
-                        <Typography component="h1" variant="h4" align="center">
-                            有給申請
-                        </Typography>
-                        <Grid container spacing={1} justify="center">
-                            <Grid item xs={1} sm={3}/>
-                            <Grid item xs={12}>
-                                <PaidLeaveSelectBox labelName="社員名" sheet="employee_list" type="employee"/>
-                            </Grid>
-                            <Grid item xs={12}>
-                                {this.props.validationMessage.employee && (
-                                    <p style={{
-                                        color: 'red',
-                                        fontSize: 12
-                                    }}>{this.props.validationMessage.employee}</p>
-                                )}
-                            </Grid>
-                            <Grid item xs={12}>
-                                <PaidLeaveSelectBox labelName="承認者" sheet="approve_list" type="approve"/>
-                            </Grid>
-                            <Grid item xs={12}>
-                                {this.props.validationMessage.approve && (
-                                    <p style={{
-                                        color: 'red',
-                                        fontSize: 12
-                                    }}>{this.props.validationMessage.approve}</p>
-                                )}
-                            </Grid>
-                            <Grid item xs={12}/>
-                            <Grid item xs={12}/>
+                            <Grid item>個別日程</Grid>
                         </Grid>
-                        {paidLeave}
-                        <Grid container justify="center">
+                    </Typography>
+                    <Typography component="h1" variant="h4" align="center">
+                        有給申請
+                    </Typography>
+                    <Grid container spacing={1} justify="center">
+                        <Grid item xs={1} sm={3}/>
+                        <Grid item xs={12}>
+                            <PaidLeaveSelectBox labelName="社員名" sheet="employee_list" type="employee"/>
+                        </Grid>
+                        <Grid item xs={12}>
+                            {this.props.validationMessage.employee && (
+                                <p style={{
+                                    color: 'red',
+                                    fontSize: 12
+                                }}>{this.props.validationMessage.employee}</p>
+                            )}
+                        </Grid>
+                        <Grid item xs={12}>
+                            <PaidLeaveSelectBox labelName="承認者" sheet="approve_list" type="approve"/>
+                        </Grid>
+                        <Grid item xs={12}>
+                            {this.props.validationMessage.approve && (
+                                <p style={{
+                                    color: 'red',
+                                    fontSize: 12
+                                }}>{this.props.validationMessage.approve}</p>
+                            )}
+                        </Grid>
+                        <Grid item xs={12}/>
+                        <Grid item xs={12}/>
+                    </Grid>
+                    {paidLeave}
+                    <Grid container justify="center">
+                        {this.state.progress ? (
+                            <CircularProgress style={{marginTop: 5}}/>
+                        ) : (
                             <Tooltip title="日程を確認してね" arrow>
-                                <Button disabled={this.state.loading}
+                                <Button disabled={this.state.progress}
                                         onClick={() => this.applyPaidLeave()}>申請する</Button>
                             </Tooltip>
-                        </Grid>
-                        <React.Fragment>
-                            <CustomizedSnackbars
-                                open={this.state.statusMessage.open}
-                                handleClose={(e, r) => this.handleClose()}
-                                type={this.state.statusMessage.type}
-                                message={this.state.statusMessage.requestResponseMessage}
-                            />
-                        </React.Fragment>
-                    </Paper>
-                </div>
-            );
-        }
+                        )}
+                    </Grid>
+                    <React.Fragment>
+                        <CustomizedSnackbars
+                            open={this.state.statusMessage.open}
+                            handleClose={(e, r) => this.handleClose()}
+                            type={this.state.statusMessage.type}
+                            message={this.state.statusMessage.requestResponseMessage}
+                        />
+                    </React.Fragment>
+                </Paper>
+            </div>
+        );
     }
 }
 
