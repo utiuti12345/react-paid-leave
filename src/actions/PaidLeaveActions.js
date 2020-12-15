@@ -6,6 +6,7 @@ export const CHANGE_PAID_LEAVE = "CHANGE_PAID_LEAVE";
 export const CHANGE_VALIDATION_MESSAGE = "CHANGE_VALIDATION_MESSAGE";
 export const CHANGE_STATUS_MESSAGE = "CHANGE_STATUS_MESSAGE";
 export const CHANGE_PROGRESS = "CHANGE_PROGRESS";
+export const CHANGE_ISGOOGLESIGNIN = "CHANGE_ISGOOGLESIGNIN";
 
 export const addPaidLeave = (payload) => ({
     type:ADD_PAID_LEAVE,
@@ -44,5 +45,10 @@ export const changeStatusMessage = (payload) => ({
 
 export const changeProgress = (payload) => ({
     type:CHANGE_PROGRESS,
+    payload
+});
+
+export const changeIsGoogleSignIn = (payload) => ({
+    type:CHANGE_ISGOOGLESIGNIN,
     payload
 });

@@ -5,7 +5,10 @@ import {
     CHANGE_EMPLOYEE_ID,
     CHANGE_APPROVE_ID,
     CHANGE_PAID_LEAVE,
-    CHANGE_VALIDATION_MESSAGE, CHANGE_STATUS_MESSAGE, CHANGE_PROGRESS
+    CHANGE_VALIDATION_MESSAGE,
+    CHANGE_STATUS_MESSAGE,
+    CHANGE_PROGRESS,
+    CHANGE_ISGOOGLESIGNIN
 } from "../actions/PaidLeaveActions";
 import {addDate, formatDate} from "../common/common";
 
@@ -26,8 +29,9 @@ const initData = {
         type: '',
         requestResponseMessage: '',
     },
-    progress:false,
+    progress: false,
     mode: 'default', // default and period
+    isGoogleSignedIn: null,
 };
 
 // レデューサー
@@ -49,6 +53,8 @@ export function paidLeaveReducer(state = initData, action) {
             return changeStatusMessage(state, action);
         case CHANGE_PROGRESS:
             return changeProgress(state, action);
+        case CHANGE_ISGOOGLESIGNIN:
+            return changeIsGoogleSignedIn(state, action);
         default:
             return state;
     }
@@ -167,7 +173,15 @@ function changeProgress(state, action) {
     const payload = action.payload;
     return {
         ...state,
-        progress:payload.progress,
+        progress: payload.progress,
+    };
+}
+
+function changeIsGoogleSignedIn(state, action) {
+    const payload = action.payload;
+    return {
+        ...state,
+        isGoogleSignedIn: payload.isGoogleSignedIn,
     };
 }
 

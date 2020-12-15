@@ -31,7 +31,7 @@ class PaidLeaveSelectBox extends React.Component {
         };
     }
 
-    handleChange(e) {
+    handleChange = (e) => {
         const data = this.state.data.find(item => item.name === e.target.value);
 
         let action;
@@ -43,7 +43,7 @@ class PaidLeaveSelectBox extends React.Component {
         this.setState({
             employeeName: e.target.value
         });
-    }
+    };
 
     handleClose = () => {
         this.setState({
