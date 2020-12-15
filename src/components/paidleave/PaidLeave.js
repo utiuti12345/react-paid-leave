@@ -9,6 +9,7 @@ import GOOGLE_SIGN_IN_PARAMS from "../../config/GoogleSignInParams";
 
 import {withStyles} from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import {changeIsGoogleSignIn} from "../../actions/PaidLeaveActions";
 
 const styles = (theme) => ({
     layout: {
@@ -27,14 +28,6 @@ const styles = (theme) => ({
 });
 
 class PaidLeave extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            isGoogleSignedIn: null,
-        };
-    }
-
     componentDidMount() {
         window.gapi.load('auth2', () => {
             //console.log(GOOGLE_SIGN_IN_PARAMS.client_id);
@@ -42,21 +35,20 @@ class PaidLeave extends React.Component {
             window.gapi.auth2.init(GOOGLE_SIGN_IN_PARAMS)
                 .then(
                     (gAuth) => {
-                        // console.log(gAuth.isSignedIn.get());
                         if (gAuth.isSignedIn.get()) {
-                            this.setState(
-                                {isGoogleSignedIn: true}
-                            );
+                            const payload = {isGoogleSignedIn:true};
+                            const action = changeIsGoogleSignIn(payload);
+                            this.props.dispatch(action);
                         } else {
-                            this.setState(
-                                {isGoogleSignedIn: false}
-                            );
+                            const payload = {isGoogleSignedIn:false};
+                            const action = changeIsGoogleSignIn(payload);
+                            this.props.dispatch(action);
                         }
                     })
                 .catch((error) => {
-                    this.setState(
-                        {isGoogleSignedIn: false}
-                    );
+                    const payload = {isGoogleSignedIn:false};
+                    const action = changeIsGoogleSignIn(payload);
+                    this.props.dispatch(action);
                     console.log("error" + error);
                 })
         })
@@ -64,8 +56,7 @@ class PaidLeave extends React.Component {
 
     render() {
         //console.log(this.props.validationMessage);
-        const {isGoogleSignedIn} = this.state;
-        const {classes} = this.props;
+        const {classes,isGoogleSignedIn} = this.props;
 
         if (isGoogleSignedIn) {
             return (

@@ -19,7 +19,6 @@ import Tooltip from "@material-ui/core/Tooltip/Tooltip";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper/Paper";
 import {withStyles} from "@material-ui/core";
-import CustomizedBackdrop from "../common/CustomizedBackdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const styles = (theme) => ({
@@ -97,6 +96,8 @@ class PaidLeaveForm extends React.Component {
             };
             let action = changeValidationMessage(payload);
             this.props.dispatch(action);
+
+            this.setState({progress: false});
         } else {
             if (this.state.checked) {
                 json = {
@@ -232,7 +233,7 @@ class PaidLeaveForm extends React.Component {
                         </Grid>
                     </Typography>
                     <Typography component="h1" variant="h4" align="center">
-                        有給申請
+                        有給休暇申請
                     </Typography>
                     <Grid container spacing={1} justify="center">
                         <Grid item xs={1} sm={3}/>
