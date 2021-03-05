@@ -27,4 +27,8 @@ jobs:
         REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
     - name: rsync deploy
-      run: rsync -auzrv -e "ssh -i key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022" --delete ./build/ utiuti12345@sv8117.xserver.jp:/home/utiuti12345/utiuti12345.xsrv.jp/public_html/ --exclude .htaccess
+      run: rsync -auzrv -e "ssh -i key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p $PORT" --delete ./build/ $USERNAME@$SERVER:/home/$USERNAME/$USERNAME.xsrv.jp/public_html/ --exclude .htaccess
+      env:
+        SERVER: ${{ secrets.SERVER }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.PORT }}
