@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {connect} from "react-redux";
 
 import {changeApproveId, changeEmployeeId} from "../../actions/PaidLeaveActions";
@@ -7,18 +7,93 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import {makeStyles} from '@material-ui/core/styles';
 import {withStyles} from "@material-ui/core";
 
 import AppConfig from "../../config/AppConfig";
+import {Styles} from "@material-ui/core/styles/withStyles";
 
-const styles = (theme) => ({
-    button: {
-        display: 'block',
-    },
-    formControl: {
-        width: 270,
-    },
-});
+// const styles = makeStyles((theme) => ({
+//     button: {
+//         display: 'block',
+//     },
+//     formControl: {
+//         width: 270,
+//     },
+// }));
+//
+// export default function PaidLeaveSelectBox(props) {
+//     const {classes,labelName,sheet} = props;
+//
+//     const [value, setValue] = React.useState('');
+//     const [open, setOpen] = React.useState(false);
+//     const [isLoaded,setLoaded] = React.useState(false);
+//     const [data,setData] = React.useState([]);
+//     const [error,setError] = React.useState('');
+//
+//     const handleChange = (e) => {
+//         const data = state.data.find(item => item.name === e.target.value);
+//
+//         let action;
+//         action = this.props.type === "employee"
+//             ? changeEmployeeId({employeeId: data.id,validationMessage:{employee:''}})
+//             : changeApproveId({approveId:data.id,validationMessage:{approve:''}})
+//         ;
+//         props.dispatch(action);
+//         setValue(e.target.value);
+//     };
+//
+//     const handleClose = () => {
+//         setOpen(false);
+//     };
+//
+//     const handleOpen = () => {
+//         setOpen(true);
+//     };
+//
+//     useEffect(() => {
+//         fetch(AppConfig.API_URL + "?sheet="+ sheet)
+//             .then(res => res.json())
+//             .then(
+//                 (result) => {
+//                     setData(result);
+//                     setLoaded(true);
+//                 },
+//                 // 補足：コンポーネント内のバグによる例外を隠蔽しないためにも
+//                 // catch()ブロックの代わりにここでエラーハンドリングすることが重要です
+//                 (error) => {
+//                     setError(error);
+//                     setLoaded(true);
+//                 }
+//             )
+//     });
+//
+//     if (isLoaded === null) {
+//         return <div>Loading...</div>;
+//     }
+//
+//     if(error){
+//         return <div>Error: {error.validationMessage}</div>;
+//     }
+//
+//     return (
+//         <div>
+//             <FormControl className={classes.formControl}>
+//                 <InputLabel>{labelName}</InputLabel>
+//                 <Select
+//                     open={open}
+//                     onClose={handleClose}
+//                     onOpen={handleOpen}
+//                     value={this.state.employeeName}
+//                     onChange={handleChange}>
+//                     {data.map((employee) =>(
+//                         <MenuItem key={employee.id} value={employee.name}>{employee.name}</MenuItem>
+//                     ))}
+//                 </Select>
+//             </FormControl>
+//         </div>
+//     )
+// };
 
 class PaidLeaveSelectBox extends React.Component {
     constructor(props) {
@@ -36,8 +111,8 @@ class PaidLeaveSelectBox extends React.Component {
 
         let action;
         action = this.props.type === "employee"
-            ? changeEmployeeId({employeeId: data.id,validationMessage:{employee:''}})
-            : changeApproveId({approveId:data.id,validationMessage:{approve:''}})
+            ? changeEmployeeId({employeeId: data.id, validationMessage: {employee: ''}})
+            : changeApproveId({approveId: data.id, validationMessage: {approve: ''}})
         ;
         this.props.dispatch(action);
         this.setState({
@@ -51,14 +126,14 @@ class PaidLeaveSelectBox extends React.Component {
         });
     };
 
-    handleOpen = () =>  {
+    handleOpen = () => {
         this.setState({
             open: true
         });
     };
 
-    componentDidMount = () =>  {
-        fetch(AppConfig.API_URL + "?sheet="+ this.props.sheet)
+    componentDidMount = () => {
+        fetch(AppConfig.API_URL + "?sheet=" + this.props.sheet)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -72,7 +147,7 @@ class PaidLeaveSelectBox extends React.Component {
                 (error) => {
                     this.setState({
                         isLoaded: true,
-                        error:error
+                        error: error
                     });
                 }
             )
@@ -96,7 +171,7 @@ class PaidLeaveSelectBox extends React.Component {
                             onOpen={() => this.handleOpen()}
                             value={this.state.employeeName}
                             onChange={(e) => this.handleChange(e)}>
-                            {data.map((employee) =>(
+                            {data.map((employee) => (
                                 <MenuItem key={employee.id} value={employee.name}>{employee.name}</MenuItem>
                             ))}
                         </Select>
