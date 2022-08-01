@@ -7,7 +7,7 @@ import CustomizedTooltip from "../common/CustomizedTooltip";
 import CustomizedSnackbars from "../common/CustomizedSnackbars";
 
 import {changeValidationMessage} from "../../actions/PaidLeaveActions";
-import {addDate, diffDate, getNextYear, getPreYear, getYear} from "../../common/common";
+import {addDate, diffDate, getPreYear, getYear} from "../../common/common";
 
 import Validation from "../../validation/Validation";
 import AppConfig from "../../config/AppConfig";
