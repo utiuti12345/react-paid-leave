@@ -152,6 +152,8 @@ function changeValidationMessageReduce(state, action) {
             approve: payload.validationMessage.approve,
             default: payload.validationMessage.default,
             period: payload.validationMessage.period,
+
+            grantEmployee: payload.validationMessage.grantEmployee,
         },
     };
 }

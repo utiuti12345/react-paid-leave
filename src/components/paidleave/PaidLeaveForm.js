@@ -7,7 +7,7 @@ import CustomizedTooltip from "../common/CustomizedTooltip";
 import CustomizedSnackbars from "../common/CustomizedSnackbars";
 
 import {changeValidationMessage} from "../../actions/PaidLeaveActions";
-import {addDate, diffDate, getYear} from "../../common/common";
+import {addDate, diffDate, getNextYear, getPreYear, getYear} from "../../common/common";
 
 import Validation from "../../validation/Validation";
 import AppConfig from "../../config/AppConfig";
@@ -183,6 +183,75 @@ class PaidLeaveForm extends React.Component {
         }
     };
 
+    grantPaidLeave = () => {
+        this.setState({progress: true});
+
+        let json = "";
+        const employeeErrorMessage = Validation.formValidate('employeeId', this.props.employeeId);
+
+        if (employeeErrorMessage !== ''){
+            const payload = {
+                validationMessage: {
+                    employee: '',
+                    approve: '',
+                    default: '',
+                    period: '',
+                    grantEmployee:employeeErrorMessage,
+                }
+            };
+            let action = changeValidationMessage(payload);
+            this.props.dispatch(action);
+
+            this.setState({progress: false});
+        }else {
+            json = {
+                type: "update_paid_leave_sheet",
+                employeeId: this.props.employeeId,
+                approveId: 1,
+                year: getPreYear(new Date()),
+                nextYear: getYear(new Date()),
+                // test
+                // year: getYear(new Date()),
+                // nextYear: getNextYear(new Date())
+            }
+
+            console.log(json);
+            fetch(AppConfig.API_URL, {
+                method: 'POST',
+                body: JSON.stringify(json)
+            })
+                .then(res => {
+                    const response = res.json();
+                    console.log(response);
+
+                    this.setState({
+                        statusMessage: {
+                            open: true,
+                            type: 'success',
+                            requestResponseMessage: '付与しました。メールを確認してください。',
+                        },
+                        progress: false,
+                    });
+                })
+                .catch(error => {
+                        console.log(error);
+
+                        this.setState({
+                            statusMessage: {
+                                open: true,
+                                type: 'error',
+                                requestResponseMessage: `失敗しました。(コード：${error.response})`,
+                            },
+                            progress: false,
+                        });
+                    }
+                ).then(() => {
+                // 常に実行される
+                this.setState({progress: false}); // スピナーを消す
+            });
+        }
+    }
+
     render() {
         const {classes} = this.props;
         let paidLeave;
@@ -281,6 +350,35 @@ class PaidLeaveForm extends React.Component {
                             message={this.state.statusMessage.requestResponseMessage}
                         />
                     </React.Fragment>
+                </Paper>
+                <Paper square className={classes.paper}>
+                    <Typography component="h1" variant="h4" align="center">
+                        有給付与
+                    </Typography>
+                    <Grid container spacing={1} justify="center">
+                        <Grid item xs={1} sm={3}/>
+                        <Grid item xs={12}>
+                            <PaidLeaveSelectBox labelName="社員名" sheet="employee_list" type="employee"/>
+                        </Grid>
+                        <Grid item xs={12}>
+                            {this.props.validationMessage.grantEmployee && (
+                                <p style={{
+                                    color: 'red',
+                                    fontSize: 12
+                                }}>{this.props.validationMessage.grantEmployee}</p>
+                            )}
+                        </Grid>
+                    </Grid>
+                    <Grid container justify="center">
+                        {this.state.progress ? (
+                            <CircularProgress style={{marginTop: 5}}/>
+                        ) : (
+                            <Tooltip title="日程を確認してね" arrow>
+                                <Button disabled={this.state.progress}
+                                        onClick={() => this.grantPaidLeave()}>有給付与する</Button>
+                            </Tooltip>
+                        )}
+                    </Grid>
                 </Paper>
             </div>
         );

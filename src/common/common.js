@@ -19,3 +19,11 @@ export const diffDate = (to,from) => {
 export const getYear = (date) => {
     return moment(date, 'YYYY-MM-DD').subtract(3, 'months').year().toString();
 };
+
+export const getPreYear = (date) => {
+    return moment(date, 'YYYY-MM-DD').subtract(12, 'months').year().toString();
+};
+
+export const getNextYear = (date) => {
+    return moment(date, 'YYYY-MM-DD').add(12, 'months').year().toString();
+};
